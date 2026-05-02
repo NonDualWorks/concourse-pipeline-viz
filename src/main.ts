@@ -18,6 +18,7 @@ const speedSlider = document.getElementById('speed-slider') as HTMLInputElement
 const speedVal = document.getElementById('speed-val') as HTMLElement
 const speedPills = document.querySelectorAll<HTMLButtonElement>('.pill[data-speed]')
 const sampleSelect = document.getElementById('sample-select') as HTMLSelectElement
+const pipelineInfo = document.getElementById('pipeline-info') as HTMLElement
 
 // ─── State ───
 
@@ -91,6 +92,17 @@ function doAnimate() {
   }
 
   if (result.warnings.length > 0) showWarnings(result.warnings)
+
+  // Show pipeline info
+  const totalSteps = result.pipeline.jobs.reduce((sum, j) => sum + j.steps.length, 0)
+  const zones = result.pipeline.zones.length
+  const parallel = result.pipeline.jobs.filter(j => j.parallelGroup).length
+  pipelineInfo.innerHTML = [
+    `<span class="info-stat"><span class="info-val">${result.pipeline.jobs.length}</span> jobs</span>`,
+    `<span class="info-stat"><span class="info-val">${totalSteps}</span> steps</span>`,
+    parallel > 0 ? `<span class="info-stat"><span class="info-val">${parallel}</span> parallel</span>` : '',
+    zones > 0 ? `<span class="info-stat"><span class="info-val">${zones}</span> zones</span>` : '',
+  ].filter(Boolean).join('')
 
   const comp = createPipelineComponent(vizOutput)
   comp.render(result.pipeline)
@@ -409,8 +421,10 @@ sampleSelect.addEventListener('change', () => {
   const key = sampleSelect.value
   if (SAMPLES[key]) {
     yamlInput.value = SAMPLES[key]
+    doAnimate()
   }
 })
 
-// Load default sample
+// Load default sample and auto-animate
 yamlInput.value = SAMPLES.simple
+requestAnimationFrame(() => doAnimate())
