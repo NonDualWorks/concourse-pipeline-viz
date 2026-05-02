@@ -91,7 +91,7 @@ function doAnimate() {
     currentTl.kill()
     currentTl = null
   }
-  gsap.globalTimeline.clear()
+  gsap.killTweensOf(vizOutput.querySelectorAll('*'))
   clearWarnings()
 
   // Parse
