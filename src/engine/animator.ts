@@ -118,6 +118,9 @@ export function buildTimeline(
     if (gStart[grpKey] === undefined || gs > gStart[grpKey]) gStart[grpKey] = gs
   })
 
+  // Animate source circle at start
+  tl.call(() => animRC(host, 'source', '#f5a623', true), [], 0.1)
+
   jobs.forEach((job, ji) => {
     const grpKey = job.parallelGroup
     let jstart = grpKey ? (gStart[grpKey] ?? cursor) : cursor
@@ -179,18 +182,24 @@ export function buildTimeline(
       comp.setJobState(job.name, 'succeeded'); animJob(comp, job.name, 'succeeded')
       drawConn(host, `[data-conn-out="${job.name}"]`, '#11c560', 0.5)
 
-      // Handle parallel group merge
+      const mergeIdx = findMergeIndex(jobs, job)
+
       if (job.parallelGroup) {
+        // Handle parallel group merge — wait for all jobs in group
         const grp = jobs.filter(j => j.parallelGroup === job.parallelGroup)
         const allDone = grp.every(g => ['succeeded', 'failed'].includes(comp._js?.[g.name] || ''))
         if (!allDone) return
         const allOk = grp.every(g => comp._js?.[g.name] === 'succeeded')
-        const mergeIdx = findMergeIndex(jobs, job)
         if (allOk) {
           animRC(host, `merge-${mergeIdx}`, '#11c560', true)
           const bridge = host.querySelector(`[data-conn-bridge="${mergeIdx}"]`)
           if (bridge) gsap.to(bridge, { stroke: '#11c560', duration: 0.4 })
         }
+      } else {
+        // Single-job column — animate merge circle + bridge directly
+        animRC(host, `merge-${mergeIdx}`, '#11c560', true)
+        const bridge = host.querySelector(`[data-conn-bridge="${mergeIdx}"]`)
+        if (bridge) gsap.to(bridge, { stroke: '#11c560', duration: 0.4 })
       }
     }, [], jEnd[ji])
 
