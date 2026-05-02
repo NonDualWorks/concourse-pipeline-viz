@@ -84,9 +84,18 @@ body {
 
 /* ─── Left panel sections ─── */
 .panel-section { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.panel-row { display: flex; align-items: center; justify-content: space-between; }
 .panel-label {
   font-size: 10px; font-family: var(--font-mono); color: var(--subtle);
   text-transform: uppercase; letter-spacing: .06em;
+}
+.sample-select {
+  font-size: 11px; font-family: var(--font-mono); color: var(--muted);
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 3px 8px; border-radius: 4px; outline: none; cursor: pointer;
+}
+kbd {
+  font-size: 10px; font-family: var(--font-mono); opacity: 0.6; margin-left: 4px;
 }
 .yaml-textarea {
   width: 100%; min-height: 300px; flex: 1;

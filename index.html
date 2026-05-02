@@ -30,7 +30,16 @@
     <div class="main-layout">
       <aside class="left-panel">
         <div class="panel-section">
-          <label class="panel-label">Pipeline YAML</label>
+          <div class="panel-row">
+            <label class="panel-label">Pipeline YAML</label>
+            <select id="sample-select" class="sample-select">
+              <option value="simple">Simple CI</option>
+              <option value="parallel">Parallel Jobs</option>
+              <option value="hooks">Hooks &amp; Nesting</option>
+              <option value="complex">Complex Pipeline</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
           <textarea id="yaml-input" class="yaml-textarea" spellcheck="false" placeholder="Paste Concourse pipeline YAML here..."></textarea>
         </div>
         <div class="panel-actions">
