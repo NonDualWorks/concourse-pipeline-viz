@@ -215,7 +215,7 @@ function findMergeIndex(jobs: ParsedJob[], job: ParsedJob): number {
   for (const j of jobs) {
     const g = j.parallelGroup || `_${jobs.indexOf(j)}`
     if (!(g in seen)) { seen[g] = ci++ }
-    if (j.name === job.name) return seen[g] - 1
+    if (j.name === job.name) return seen[g]
   }
   return 0
 }
